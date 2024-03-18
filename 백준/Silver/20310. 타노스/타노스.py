@@ -1,16 +1,22 @@
-inputStr = input()
-L = len(inputStr)
-zero, one = 0, 0
+inputStr = list(input())
+zero = inputStr.count('0')
+one = inputStr.count('1')
 
-for i in range(L):
+count = 0
+for i in inputStr:
+    if(i == '1'):
+        count += 1
+        inputStr.remove(i)
+    if(count == one//2):
+        break
+
+count = 0
+for i in range(len(inputStr)-1, -1, -1):
     if(inputStr[i] == '0'):
-        zero += 1
-    else:
-        one+=1
+        count += 1
+        del inputStr[i]
+    if(count == zero//2):
+        break
 
-for i in range(zero//2):
-    print('0', end='')
-
-for i in range(one//2):
-    print('1', end='')
-print()
+for i in range(len(inputStr)):
+    print(inputStr[i], end='')
