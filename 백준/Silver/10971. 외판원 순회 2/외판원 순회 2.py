@@ -1,33 +1,31 @@
-n = int(input())
-graph = []
-minNum = 1e8
+import sys
 
-for i in range(n):
-    graph.append(list(map(int, input().split())))
+N = int(input())
 
-def Dfs(num, start, visited, total):
-    global minNum
+Graph = []
+result = sys.maxsize
 
-    if(False not in visited):
-        if(graph[num][start] > 0):
-            total += graph[num][start]
-            minNum = min(minNum, total)
-        return
+for _ in range(N):
+    Graph.append(list(map(int, input().split())))
+
+
+def Dfs(current, start, visited, total):
+    global result
+
+    if(not False in visited):
+        if(Graph[current][start] != 0):
+            result = min(result, total + Graph[current][start])
     
+    else:
+        for i in range(N):
+            if(Graph[current][i] > 0 and visited[i] == False and  total+Graph[current][i] < result):
+                visited[i] = True
+                Dfs(i, start, visited, total + Graph[current][i])
+                visited[i] = False
 
-    for i in range(n):
-        if (graph[num][i] != 0) and (not visited[i]) and (total < minNum):
-            visited[i] = True
-            tmp = total +graph[num][i]
-            Dfs(i, start,visited, tmp)
-            visited[i] = False
-
-for i in range(n):
-    visited = [False] * n
+for i in range(N):
+    visited = [False] * N
     visited[i] = True
-    Dfs(i, i, visited, 0)
+    Dfs(i, i, visited ,0)
 
-print(minNum)
-
-
-
+print(result)
