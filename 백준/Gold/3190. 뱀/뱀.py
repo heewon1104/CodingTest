@@ -1,87 +1,55 @@
 from collections import deque
 
 N = int(input())
-board = []
-warm = deque()
+K = int(input())
+apples = []
+for _ in range(K):
+    x, y = map(int, input().split())
+    apples.append([x-1, y-1])
+L = int(input())
+command = []
+for _ in range(L):
+    num, tmp= input().rstrip('\n').split()
+    command.append([int(num), tmp])
 
-for _ in range(N):
-    board.append(list([0] * N))
-
-y = 0
-x = 0
-
-# 우 하 좌 상
+currentX = 0
+currentY = 0
 dx = [1, 0, -1, 0]
 dy = [0, 1, 0, -1]
-dir = 0
 
-apple = int(input())
-for _ in range(apple):
-    ay, ax = map(int, input().split())
-    board[ay-1][ax-1] = 1
-
-command = int(input())
-cmd_arr = []
-cmd_idx = 0
-
-for _ in range(command):
-    input_cmd = input().split()
-    cmd_arr.append(input_cmd)
-
-
+queue = deque()
+queue.append([currentX, currentY])
+direction = 0
+directionIdx = 0
 time = 0
-warm.append([0,0])
 
 while(1):
-    # 방향전환시
-    if(time == int(cmd_arr[cmd_idx][0])):
-        #오른쪽, 시계
-        if(cmd_arr[cmd_idx][1] == 'D'):
-            dir = (dir +1)%4
-
-        #왼쪽,반시계
-        elif(cmd_arr[cmd_idx][1] == 'L'):
-            dir = (dir+3)%4
-        
-        if(y + dy[dir] < 0 or y + dy[dir] >= N or x + dx[dir] < 0 or x + dx[dir] >= N):
-            print(time+1)
-            break
-
-        if(warm.count([x+dx[dir], y + dy[dir]]) != 0):
-            print(time+1)
-            break
-
-        x = x + dx[dir]
-        y = y + dy[dir]
-
-        if(cmd_idx < command-1):
-            cmd_idx += 1
-
-        if(board[y][x] == 0):
-            warm.popleft()
-        else:
-            board[y][x] = 0
-        
-        warm.append([x,y])
-            
-    #안할시 
+    if([queue[-1][1]+dy[direction], queue[-1][0]+dx[direction]] in apples):
+        apples.remove([queue[-1][1]+dy[direction], queue[-1][0]+dx[direction]])
+        x, y = queue[-1]
     else:
-        if(y + dy[dir] < 0 or y + dy[dir] >= N or x + dx[dir] < 0 or x + dx[dir] >= N):
-            print(time+1)
-            break
-
-        if(warm.count([x+dx[dir], y + dy[dir]]) != 0):
-            print(time+1)
-            break
-
-        x = x + dx[dir]
-        y = y + dy[dir]
-
-        if(board[y][x] == 0):
-            warm.popleft()
-        else:
-            board[y][x] = 0
-        
-        warm.append([x,y])
-
+        x,y = queue.popleft()
+    
+    if(queue):
+        newx, newy = queue[-1][0]+dx[direction], queue[-1][1]+dy[direction]
+    else:
+        newx, newy = x+dx[direction], y+dy[direction]
     time += 1
+
+    if(newx < 0 or newx >=N or newy<0 or newy>=N):
+        print(time)
+        break
+
+    elif([newx,newy] in queue or (newx == x and newy == y)):
+        print(time)
+        break
+
+    queue.append([newx, newy])
+
+    if(directionIdx < len(command)):
+        if(command[directionIdx][0] == time):
+            if(command[directionIdx][1] == 'D'):
+                direction = (direction+1)%4
+            else:
+                direction = (direction-1+4)%4
+            directionIdx+=1
