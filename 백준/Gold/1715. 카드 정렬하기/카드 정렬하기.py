@@ -1,17 +1,15 @@
 import heapq
 
-n = int(input())
+N = int(input())
 arr = []
-count = 0
-
-for _ in range(n):
+total = 0
+for _ in range(N):
     heapq.heappush(arr, int(input()))
 
-while(len(arr) != 1):
-    a = heapq.heappop(arr)
-    b = heapq.heappop(arr)
-    count += a
-    count += b
-    heapq.heappush(arr, a+b)
+while(len(arr) > 1):
+    num1 = heapq.heappop(arr)
+    num2  = heapq.heappop(arr)
+    total += num1 + num2
+    heapq.heappush(arr, num1+num2)
 
-print(count)
+print(total)
