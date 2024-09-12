@@ -1,43 +1,43 @@
-from collections import deque
 import sys
+from collections import deque
+sys.setrecursionlimit(10**7)
 
-def dfs(start):
-  visited[start] = True
-  print(start, end = ' ')
+N, M, V = map(int, sys.stdin.readline().split())
+edges = list([] for _ in range(N+1))
 
-  for i in arr[start]:
-    if not visited[i]:
-      dfs(i)
+for i in range(M):
+    start, end = map(int, sys.stdin.readline().split())
+    edges[start].append(end)
+    edges[end].append(start)
 
-def bfs(start):
-    queue = deque([start])
-    visited[start] = True
-    while queue:
+for i in range(1, N+1):
+    edges[i].sort()
 
-        v = queue.popleft()
-        print(v, end=" ")
-        for i in arr[v]:
-            if not visited[i]:
-                visited[i] = True
-                queue.append(i)
+def Dfs(node, visited):
+    if(visited[node]):
+        return
+    visited[node] = True
+    print(node, end=' ')
+    for i in range(len(edges[node])):
+        Dfs(edges[node][i], visited)
 
-n, m, v = map(int, sys.stdin.readline().split())
+def Bfs(start):
+    queue = deque()
+    queue.append(start)
+    visited = [False] * (N+1)
+    
+    while(queue):
+        node = queue.popleft()
+        visited[node] = True
+        print(node, end=' ')
 
-arr = [[] for _ in range(n+1)]
+        for i in range(len(edges[node])):
+            if(visited[edges[node][i]] == False):
+                queue.append(edges[node][i])
+                visited[edges[node][i]] = True
 
-for i in range(m):
-  x, y = map(int, sys.stdin.readline().split())
-  arr[x].append(y)
-  arr[y].append(x)
-
-for i in arr:
-  i.sort()
-
-visited = [False] * (n+1)
-dfs(v)
+visited = [False] * (N+1)   
+Dfs(V, visited)
 print()
-
-visited = [False] * (n+1)
-bfs(v)
-
-
+Bfs(V)
+print()
