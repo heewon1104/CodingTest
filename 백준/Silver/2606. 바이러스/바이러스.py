@@ -1,69 +1,38 @@
-from collections import deque
-# BFS로 풀었을때
-n = int(input())
-node = int(input())
+import sys
 
-arr = []
-for _ in range(n):
-    arr.append(list([0] * n))
+N = int(sys.stdin.readline())
+M = int(sys.stdin.readline())
 
-for _ in range(node):
-    a,b = map(int, input().split())
-    a -= 1
-    b -= 1
-    arr[a][b] = 1
-    arr[b][a] = 1
+edge = [[] for _ in range(N+1)]
+parent = [i for i in range(N+1)]
+ConnectCount = 0
 
-visit = [False] * n
-count = 0
+for i in range(M):
+    start, end = map(int, sys.stdin.readline().split())
+    edge[start].append(end)
+    edge[end].append(start)
 
+def findParent(node):
+    while(parent[node] != node):
+        node = parent[node]
+    return parent[node]
 
-queue = deque()
-queue.append(0)
+def UnionSet(node1, node2):
+    node1root = findParent(node1)
+    node2root = findParent(node2)
 
-while(queue):
-    num = queue.popleft()
-    visit[num] = True
-    
-    for i in range(n):
-        if(not visit[i] and arr[num][i] == 1):
-            queue.append(i)
+    if(node1root != node2root):
+        if(node1root < node2root):
+            parent[node2root] = node1root
+        else:
+            parent[node1root] = node2root
 
-for i in range(n):
-     if(visit[i] == True):
-         count+=1
+for i in range(1, N+1):
+    for j in range(len(edge[i])):
+        UnionSet(i, edge[i][j])
 
-print(count-1)
-    
+for i in range(1, N+1):
+    if(findParent(i) == 1):
+        ConnectCount += 1
 
-# DFS로 풀었을때
-# n = int(input())
-# node = int(input())
-# arr = []
-# for _ in range(n):
-#     inputlist = list([0] * n)
-#     arr.append(inputlist)
-
-# visit = [False] * n
-# count = 0
-
-# for i in range(node):
-#     a, b = map(int,input().split())
-#     a-=1
-#     b-=1
-#     arr[a][b] = 1
-#     arr[b][a] = 1
-
-# def dfs(index):
-#     visit[index] = True
-#     for i in range(n):
-#         if(not visit[i] and arr[index][i] == 1):
-#             dfs(i)
-
-# dfs(0)
-
-# for i in range(n):
-#     if(visit[i] == True):
-#         count+=1
-
-# print(count-1)
+print(ConnectCount-1)
