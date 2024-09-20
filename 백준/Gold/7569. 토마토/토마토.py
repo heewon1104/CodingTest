@@ -1,76 +1,47 @@
-from collections import deque
+import sys
+from collections import deque 
 
-#m: 가로 n: 세로 h: 높이
-m,n,h = map(int, input().split())
+M, N, H = map(int, sys.stdin.readline().split())
+boxes = [[list(map(int, sys.stdin.readline().split())) for _ in range(N)] for _ in range(H)]
+dx = [1, 0, -1, 0, 0, 0]
+dy = [0, 1, 0, -1, 0, 0]
+dh = [0,0 ,0, 0, 1, -1]
 
-res = []
-for _ in range(h):
-    arr = []
-    for _ in range(n):
-        arr.append(list(map(int, input().split())))
-    res.append(arr)
+def checkExsist(num):
+    for h in range(H):
+            for y in range(N):
+                for x in range(M):
+                    if(boxes[h][y][x] == num):
+                        return True
+    return False
 
-queue = deque()
 
-for i in range(h):
-    for j in range(n):
-        for k in range(m):
-            if(res[i][j][k] == 1):
-                queue.append([i,j,k,0])
-
-lastday = -1
-
-while(queue):
-    poparr = queue.popleft()
-    z = poparr[0]
-    y = poparr[1]
-    x = poparr[2]
-    day = poparr[3]
-    lastday = day
-
-    if(z-1 >= 0):
-        if(res[z-1][y][x] == 0):
-            queue.append([z-1,y,x,day+1])
-            res[z-1][y][x]=1
+def bfs():
+    queue = deque()
     
-    if(z+1 < h):
-        if(res[z+1][y][x] == 0):
-            queue.append([z+1,y,x,day+1])
-            res[z+1][y][x]=1
-    
-    if(y-1 >= 0):
-        if(res[z][y-1][x] == 0):
-            queue.append([z,y-1,x,day+1])
-            res[z][y-1][x]=1
-    
-    if(y+1 < n):
-        if(res[z][y+1][x] == 0):
-            queue.append([z,y+1,x,day+1])
-            res[z][y+1][x]=1
-    
-    if(x-1 >= 0):
-        if(res[z][y][x-1] == 0):
-            queue.append([z,y,x-1,day+1])
-            res[z][y][x-1]=1
-    
-    if(x+1 < m):
-        if(res[z][y][x+1] == 0):
-            queue.append([z,y,x+1,day+1])
-            res[z][y][x+1]=1
+    result = 0
+    for h in range(H):
+        for y in range(N):
+            for x in range(M):
+                if(boxes[h][y][x] == 1):
+                    queue.append([h, y, x, 0])
 
-check = False
-for i in range(h):
-    for j in range(n):
-        for k in range(m):
-            if(res[i][j][k] == 0):
-               check = True
-               break
-        if(check == True):
-            break
-    if(check == True):
-            break
+    while(queue):
+        h, y, x, day = queue.popleft()
 
-if(check == True):
-    print(-1)
-else:
-    print(lastday)
+        for i in range(6):
+            nextH = h + dh[i]
+            nextY = y + dy[i]
+            nextX = x + dx[i]
+
+            if(nextH >= 0 and nextH < H and nextY >= 0 and nextY < N and nextX>=0 and nextX<M and boxes[nextH][nextY][nextX] == 0):
+                queue.append([nextH, nextY, nextX, day+1])
+                boxes[nextH][nextY][nextX] = 1
+                result = day+1
+    
+    if(checkExsist(0)):
+        print(-1)
+    else:
+        print(result)
+
+bfs()
