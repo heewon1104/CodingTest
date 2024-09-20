@@ -10,13 +10,16 @@ for i in range(M):
 
 def Bfs():
     visited = [-1 for _ in range(N+1)]
+    visited[0] = 0
     visited[X] = 0
     queue = deque()
     queue.append([X, 0])
     
     while(queue):
-        current, distance = queue.popleft()
+        if(-1 not in visited):
+            break
 
+        current, distance = queue.popleft()
         for i in range(len(road[current])):
             if(visited[road[current][i]] == -1):
                 queue.append([road[current][i], distance+1])
