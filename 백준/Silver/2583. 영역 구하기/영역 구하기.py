@@ -34,5 +34,4 @@ for i in range(N):
 
 print(len(result))
 result.sort()
-for num in result:
-    print(num, end=' ')
+print(' '.join(map(str, result)))
