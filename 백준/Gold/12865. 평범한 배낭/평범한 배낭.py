@@ -15,7 +15,7 @@ for i in range(1, N+1):
         if(j < currentWeight):
             dp[i][j] = dp[i-1][j]
         else:
-            dp[i][j] = max(currentCost + dp[i-1][j-currentWeight], dp[i][j-1], dp[i-1][j])
+            dp[i][j] = max(currentCost + dp[i-1][j-currentWeight], dp[i-1][j])
 
 
 print(dp[N][K])
