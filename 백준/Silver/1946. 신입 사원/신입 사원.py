@@ -1,20 +1,17 @@
 import sys
-T = int(input())
+
+T = int(sys.stdin.readline())
 
 for _ in range(T):
+    N = int(sys.stdin.readline())
+    score = [list(map(int, sys.stdin.readline().split())) for _ in range(N)]
+    score.sort(key=lambda x: x[1])
 
-    N = int(input())
-    arr = []
-    count = 0
-    for i in range(N):
-        arr.append(list(map(int, sys.stdin.readline().split())))
-
-    arr.sort(key=lambda x:x[0])
-    
-    res = 1
-    cutLine = arr[0][1]
+    count = 1
+    startScore = score[0][0]
     for i in range(1, N):
-        if(arr[i][1] < cutLine):
-            res+=1
-            cutLine = arr[i][1]
-    print(res)
+        if(score[i][0] < startScore):
+            startScore = score[i][0]
+            count += 1
+        
+    print(count)
