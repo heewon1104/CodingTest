@@ -1,27 +1,20 @@
 import sys
+input = sys.stdin.readline
 
-n = int(input())
+N = int(input())
+score = [0]
+for _ in range(N):
+  score.append(int(input()))
 
-arr = []
+Mscore = [0]*(N+1)
 
-for i in range(n):
-    arr.append(int(input()))
+def stair(num):
+  if num < 1:
+    return 0
+  if Mscore[num] != 0:
+    return Mscore[num]
 
-d = [0] * n
+  Mscore[num] = max(stair(num-3)+score[num-1], stair(num-2)) + score[num]
+  return Mscore[num]
 
-if(n == 1):
-    print(arr[0])
-elif(n == 2):
-    print(arr[0] + arr[1])
-elif(n == 3):
-    print(max(arr[0] + arr[2], arr[1] + arr[2]))
-else:
-    d[0] = arr[0]
-    d[1] = arr[0] + arr[1]
-    d[2] = max(arr[0] + arr[2], arr[1] + arr[2])
-
-    for i in range(3, n):
-        d[i] = max(d[i-3] + arr[i-1] + arr[i], d[i-2] + arr[i])
-
-    print(d[n-1])
-
+print(stair(N))
