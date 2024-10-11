@@ -14,23 +14,22 @@ for _ in range(E):
 V1, V2 = map(int, sys.stdin.readline().split())
 
 def Dijkstra(start, end):
-    cost = [INF] * (N+1)
+    cost = [sys.maxsize] * (N+1)
     cost[start] = 0
     heap = []
     heapq.heappush(heap, [0, start])
 
-    while heap:
+    while(heap):
         currentCost, currentNode = heapq.heappop(heap)
-        
-        # 현재 비용이 이미 기록된 최소 비용보다 크면 무시
-        if(currentCost > cost[currentNode]):
-            continue
+        for j in range(len(edges[currentNode])):
+            nextNode, nextCost = edges[currentNode][j]
+            if(nextCost >= cost[nextNode]):
+                continue
 
-        for nextNode, nextCost in edges[currentNode]:
-            newCost = currentCost + nextCost
-            if(newCost < cost[nextNode]):
-                cost[nextNode] = newCost
-                heapq.heappush(heap, [newCost, nextNode])
+            else:
+                if(cost[nextNode] > cost[currentNode] + nextCost):
+                    cost[nextNode] = cost[currentNode] + nextCost
+                    heapq.heappush(heap, [cost[nextNode], nextNode])
     
     return cost[end]
 
