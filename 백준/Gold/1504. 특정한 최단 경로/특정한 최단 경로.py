@@ -23,7 +23,7 @@ def Dijkstra(start, end):
         currentCost, currentNode = heapq.heappop(heap)
         for j in range(len(edges[currentNode])):
             nextNode, nextCost = edges[currentNode][j]
-            if(nextCost >= cost[nextNode]):
+            if(currentCost >= cost[nextNode]):
                 continue
 
             else:
