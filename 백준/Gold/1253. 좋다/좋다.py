@@ -3,7 +3,7 @@ N = int(sys.stdin.readline())
 arr = list(map(int, sys.stdin.readline().split()))
 arr.sort()
 
-res = []
+res = 0
 
 for i in range(N):
     target = arr[i]
@@ -20,11 +20,11 @@ for i in range(N):
         two_sum = arr[left] + arr[right]
         
         if two_sum == target:
-            res.append(target)
+            res += 1
             break
         elif two_sum < target:
             left += 1
         else:
             right -= 1
 
-print(len(res))
+print(res)
