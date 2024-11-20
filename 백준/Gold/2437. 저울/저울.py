@@ -5,7 +5,7 @@ arr.sort()
 
 total = 0
 for i in range(N):
-    if total + 1 < arr[i]:
+    if(total + 1 < arr[i]):
         break
     total += arr[i]
 
