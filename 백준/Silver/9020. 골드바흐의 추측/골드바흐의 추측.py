@@ -1,29 +1,16 @@
-import math
-N =  int(input())
-arr = []
-prime_arr = []
+N = int(input())
+arr = [int(input()) for _ in range(N)]
+isPrimeArr = [True] * max(arr)
 
-for _ in range(N):
-    arr.append(int(input()))
+for i in range(2, len(isPrimeArr)):
+    for j in range(2, i):
+        if(i % j == 0):
+            isPrimeArr[i] = False
+            break
 
-def checkPrime():
-    for i in range(2, max(arr)+1):
-        check_break = False
-        for j in range(2, int(math.sqrt(i))+1):
-            if(i % j == 0):
-                check_break = True
-                break
-        if(not check_break):
-            prime_arr.append(i)
-
-checkPrime()
-
-for i in arr:
-    num1 = 0
-    num2 = i
-    for j in prime_arr:
-        if(i-j in prime_arr and abs((i-j)-j) < num2 - num1):
-            num1 = j
-            num2 = i-j
-
-    print(num1, num2)
+for num in arr:
+    for num1 in range(num // 2, -1, -1):
+        num2 = num - num1
+        if(isPrimeArr[num1] and isPrimeArr[num2]):
+            print(min(num1, num2), max(num1, num2))
+            break
