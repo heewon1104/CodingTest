@@ -1,20 +1,15 @@
-N = int(input())
-def move(start, to):
-    print(start, to)
-
-def hanoi(n, start, tmp, end):
-    if(n == 1):
-        move(start, end)
-        return 
+def move(start, via, end, item):
+    if(item == 1):
+        print(start, end)
     else:
-        hanoi(n-1, start, end, tmp)
-        move(start, end)
-        hanoi(n-1, tmp, start, end)
+        move(start, end, via, item-1)
+        print(start, end)
+        move(via, start, end, item-1)
 
+N = int(input())
 if(N == 1):
     print(1)
 else:
     print(2**N-1)
-
 if(N <= 20):
-    hanoi(N, 1, 2, 3)
+    move(1, 2, 3, N)
