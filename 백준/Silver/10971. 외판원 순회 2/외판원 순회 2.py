@@ -1,31 +1,27 @@
 import sys
 
 N = int(input())
+arr = []
+for _ in range(N):
+    arr.append(list(map(int, input().split())))
 
-Graph = []
 result = sys.maxsize
 
-for _ in range(N):
-    Graph.append(list(map(int, input().split())))
-
-
-def Dfs(current, start, visited, total):
+def DFS(visit, startNode, currentNode, cost):
     global result
-
-    if(not False in visited):
-        if(Graph[current][start] != 0):
-            result = min(result, total + Graph[current][start])
+    if(arr[currentNode][startNode] != 0 and not False in visit):
+        result = min(result, cost + arr[currentNode][startNode])
+        return
     
-    else:
-        for i in range(N):
-            if(Graph[current][i] > 0 and visited[i] == False and  total+Graph[current][i] < result):
-                visited[i] = True
-                Dfs(i, start, visited, total + Graph[current][i])
-                visited[i] = False
+    for i in range(0, N):
+        if(arr[currentNode][i] > 0 and visit[i] == False and cost + arr[currentNode][i] < result):
+            visit[i] = True
+            DFS(visit, startNode,  i, cost + arr[currentNode][i])
+            visit[i] = False
 
 for i in range(N):
-    visited = [False] * N
-    visited[i] = True
-    Dfs(i, i, visited ,0)
+    visit = [False] * N
+    visit[i] = True
+    DFS(visit, i, i, 0)
 
 print(result)
