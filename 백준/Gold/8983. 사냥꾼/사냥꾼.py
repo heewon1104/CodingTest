@@ -1,37 +1,28 @@
-import sys
+N, M, L = map(int, input().split())
+Hunter = list(map(int, input().split()))
+Animals = []
+for _ in range(M):
+    Animals.append(list(map(int, input().split())))
+result = 0
 
-M, N, L = map(int, input().split())
-hunterPosition = list(map(int, sys.stdin.readline().split()))
-hunterPosition.sort()
-animalPodition = []
-count = 0
+Hunter.sort()
 
-for _ in range(N):
-    x, y = map(int, sys.stdin.readline().split())
-    animalPodition.append([x, y])
+for animal in Animals:
+    X, Y = animal[0], animal[1]
+    left, right = 0, N
 
+    while(1):
+        mid = (left + right)//2
 
-for i in range(N):
-    if(animalPodition[i][1] > L):
-        continue
-
-    start = animalPodition[i][1] + animalPodition[i][0] - L
-    end = L - animalPodition[i][1] + animalPodition[i][0]
-
-    left, right = 0, M-1
-
-    while(left <= right):
-        mid = (left+right)//2
-        if(hunterPosition[mid] >= start and hunterPosition[mid] <= end):
-            count += 1
+        if(abs(X-Hunter[mid])+Y <= L):
+            result += 1
             break
-        elif(hunterPosition[mid] < end):
-            left = mid + 1
+        if(left+1 == right or X == Hunter[mid]):
+            break
+
+        if(X > Hunter[mid]):
+            left = mid
         else:
-            right = mid -1
+            right = mid
 
-print(count)
-
-    
-
-
+print(result)
