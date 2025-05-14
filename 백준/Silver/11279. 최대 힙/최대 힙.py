@@ -2,16 +2,14 @@ import heapq
 import sys
 
 N = int(input())
-numList = []
+heap = []
 
-for i in range(N):
-    num = int(sys.stdin.readline())
-    if(num == 0):
-        if(len(numList) == 0):
+for _ in range(N):
+    inputNum = int(sys.stdin.readline())
+    if(inputNum == 0):
+        if(not heap):
             print(0)
         else:
-            print(-1 * heapq.heappop(numList))
-    
+            print(-heapq.heappop(heap))
     else:
-        heapq.heappush(numList, -1 * num)
-
+        heapq.heappush(heap, -inputNum)
