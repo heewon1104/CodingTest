@@ -1,47 +1,35 @@
-import sys
-
 N = int(input())
 arr = []
-for i in range(N):
-    arr.append(sys.stdin.readline().rstrip('\n'))
- 
+for _ in range(N):
+    arr.append(list(map(int, input())))
+
 res = []
 
-def checkArea(startX, endX, startY, endY):
-    value = arr[startY][startX]
-    for i in range(startY, endY + 1):
-        for j in range(startX, endX + 1):
-            if(value != arr[i][j]):
+def Check(startX, endX, startY, endY):
+    checkFlag = arr[startY][startX]
+    for y in range(startY, endY):
+        for x in range(startX, endX):
+            if(checkFlag != arr[y][x]):
                 return -1
-    
-    if(value == '1'):
-        return 1
-    else:
-        return 0
+    return checkFlag
 
-def devide(startX, endX, startY, endY):
-    check = checkArea(startX, endX, startY, endY)
-    
-    if(check == -1):
-        midX = (startX+endX)//2
-        midY = (startY+endY)//2
-        
+def Devide(startX, endX, startY, endY):
+    checkFlag = Check(startX, endX, startY, endY)
+    if(checkFlag == -1):
         res.append('(')
-        devide(startX, midX, startY, midY)
-        devide(midX+1, endX, startY, midY)
-        devide(startX, midX, midY+1, endY)
-        devide(midX+1, endX, midY+1, endY)
+        Devide(startX, (startX+endX)//2, startY, (startY+endY)//2)
+        Devide((startX+endX)//2, +endX, startY, (startY+endY)//2)
+        Devide(startX, (startX+endX)//2, (startY+endY)//2, endY)
+        Devide((startX+endX)//2, endX, (startY+endY)//2, endY)
         res.append(')')
-
-    elif(check == 0):
-        res.append(0)
-        return
+    elif(checkFlag == 0):
+        res.append('0')
     else:
-        res.append(1)
-        return
+        res.append('1')
 
-devide(0, N-1, 0, N-1)
+
+startX, endX, startY, endY = 0, N, 0, N
+Devide(startX, endX, startY, endY)
 
 for i in res:
     print(i, end='')
-print()
