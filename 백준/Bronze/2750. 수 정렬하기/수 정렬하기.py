@@ -1,11 +1,9 @@
-n = int(input())
-
+N = int(input())
 arr = []
-
-for _ in range(n):
+for _ in range(N):
     arr.append(int(input()))
 
 arr.sort()
 
-for i in arr:
-    print(i)
+for num in arr:
+    print(num, end="\n")
