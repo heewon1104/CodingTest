@@ -1,37 +1,30 @@
+import sys
 import heapq
-N = int(input())
 
-arr = []
-trailAvailable = []
-idxSet = []
-maxPeople = 0
+N = int(sys.stdin.readline())
 
-startpoint = 0
-
+homes = []
 for _ in range(N):
-    start, end = map(int, input().split())
-    arr.append([min(start, end), max(start, end)])
+    inputArr = list(map(int, sys.stdin.readline().split()))
+    homes.append([min(inputArr), max(inputArr)])
+D = int(sys.stdin.readline())
 
-distance = int(input())
+homes.sort(key=lambda x: (x[0], x[1]))
 
-# 시작점을 기준으로 정렬
-arr.sort(key= lambda x : (x[1], x[0]))
+heap = []
+result = 0
 
-trailStart = arr[0][0]
-
-for i in range(N):
-    start,end = arr[i][0],arr[i][1] 
-
-    heapq.heappush(trailAvailable, [start, end])
-
-    checkStart = end - distance
-
-    while(trailAvailable):
-        if(checkStart > trailAvailable[0][0]):
-            heapq.heappop(trailAvailable)
+for i in range(N-1, -1, -1):
+    if(homes[i][1] - homes[i][0] > D):
+        continue
+    else:
+        if(not heap or -heap[0] - homes[i][0] <= D):
+            heapq.heappush(heap, -homes[i][1])
+            result = max(result, len(heap))
         else:
-            break
-    
-    maxPeople = max(maxPeople, len(trailAvailable))
-
-print(maxPeople)
+            while(heap and -heap[0] - homes[i][0] > D):
+                heapq.heappop(heap)
+            heapq.heappush(heap, -homes[i][1])
+            result = max(result, len(heap))
+print(result)
+            
