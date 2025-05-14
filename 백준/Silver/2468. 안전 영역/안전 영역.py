@@ -1,66 +1,45 @@
+from collections import deque
 import sys
-sys.setrecursionlimit(10**7)
 
 N = int(input())
-
-Graph = []
-result = 0
-maxHeight = 0
-minHeight = sys.maxsize
-Count = 0
-
-# 우측, 아래, 좌측, 위
-dx = [1, 0 ,-1, 0]
-dy = [0, 1, 0 ,-1]
-
+minNum, maxNum = sys.maxsize, 0
+board = []
 for _ in range(N):
-    inputStr = list(map(int, input().split()))
-    maxHeight = max(maxHeight, max(inputStr))
-    minHeight = min(minHeight, min(inputStr))
-    Graph.append(inputStr)
+    inputArr = list(map(int, input().split()))
+    board.append(inputArr)
+    minNum = min(minNum, min(inputArr))
+    maxNum = max(maxNum, max(inputArr))
 
-def Dfs(x, y, visited, height):
-    if(Graph[y][x] > height):
-        return
-    if(visited[y][x] == True):
-        return
-    else:
-        visited[y][x] = True
+dx = [0, 1, 0 , -1]
+dy = [-1, 0, 1, 0]
+
+def CheckArea(currentX, currentY, visit):
+    queue = deque()
+    queue.append((currentX, currentY))
+
+    while(queue):
+        poppedX, poppedY = queue.popleft()
         for i in range(4):
-            if(x + dx[i] < 0 or x + dx[i] >= N or y + dy[i] < 0 or y + dy[i] >= N):
-                continue
-            else:
-                if(Graph[y + dy[i]][x + dx[i]] <= height):
-                    visited[y + dy[i]][x + dx[i]] = True
-                    Dfs(x + dx[i], y + dy[i], visited, height)
+            nextX = poppedX + dx[i]
+            nextY = poppedY + dy[i]
 
-# 잠긴 지역은 True, 안잠긴 지역은 False
-def checkArea(x, y, visited, firstFlag):
-    global Count
-    if(visited[y][x] == True):
-        return
-    else:
-        visited[y][x] = True
-        if(firstFlag == True):
-            Count += 1
-        for i in range(4):
-            if(x + dx[i] < 0 or x + dx[i] >= N or y + dy[i] < 0 or y + dy[i] >= N):
-                continue
-            else:
-                if(visited[y + dy[i]][x + dx[i]] == False):
-                    checkArea(x + dx[i], y + dy[i], visited, False)
+            if(nextX >= 0 and nextX < N and nextY >= 0 and nextY < N and not visit[nextY][nextX] and board[nextY][nextX] > height):
+                queue.append((nextX, nextY))
+                visit[nextY][nextX] = True
 
-for height in range(minHeight-1, maxHeight+1):
-    visited = list(list(False for _ in range(N)) for _ in range(N))
-    Count = 0
-    for i in range(N):
-        for j in range(N):
-            Dfs(j, i, visited, height)
-    
-    for i in range(N):
-        for j in range(N):
-            checkArea(j, i, visited, True)
+result = 0
 
-    result = max(result, Count)
+for height in range(minNum-1, maxNum+1):
+    visit = []
+    count = 0
+    for _ in range(N):
+        visit.append([False]*N)
+
+    for y in range(N):
+        for x in range(N):
+            if(not visit[y][x] and board[y][x] > height):
+                CheckArea(x, y, visit)
+                count += 1
+    result = max(result, count)
 
 print(result)
