@@ -1,39 +1,18 @@
-import sys
-
 N = int(input())
-arr = list(map(int, sys.stdin.readline().split()))
-Stack = []
-result = []
+arr = list(map(int, input().split()))
+res = [-1] * N
+stack = []
 
-for i in range(N-1, 0, -1):
-    if(not Stack):
-        result.append(-1)
-        Stack.append(arr[i])
-        continue
+prev = arr[0]
+stack.append((prev, 0))
 
-    if(Stack[-1] <= arr[i]):
-        while(Stack and arr[i] >= Stack[-1]):
-            Stack.pop()
-        
-        if(not Stack):
-            result.append(-1)
-            Stack.append(arr[i])
-        else:
-            result.append(Stack[-1])
-        Stack.append(arr[i])
-        
-    else:
-        result.append(Stack[-1])
-        if(arr[i-1] < arr[i]):
-            Stack.append(arr[i])
+for i in range(1, N):
+    if(prev < arr[i]):
+        while(stack and stack[-1][0] < arr[i]):
+            popped, idx = stack.pop()
+            res[idx] = arr[i]
+    prev = arr[i]
+    stack.append((arr[i],i))
 
-while(Stack and arr[0] >= Stack[-1]):
-    Stack.pop()
-if(not Stack):
-    result.append(-1)
-else:
-    result.append(Stack[-1])
-
-for i in range(len(result)):
-    print(result.pop(), end=' ')
-print()
+for i in res:
+    print(i, end=' ')
