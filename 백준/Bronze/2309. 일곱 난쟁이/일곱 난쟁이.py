@@ -1,19 +1,19 @@
-from itertools import combinations
-
 arr = []
-total = 0
-
 for _ in range(9):
     arr.append(int(input()))
 
+def Check():
+    for i in range(9):
+        for j in range(i+1, 9):
+            total = 0
+            for k in range(9):
+                if(k != i and k!=j):
+                    total += arr[k]                
+            if(total == 100):
+                return i, j
 
-answer = list(combinations(arr, 7))
-
-for i in range(len(answer)):
-    if(sum(answer[i]) == 100):
-        answerList = list(answer[i])
-        answerList.sort()
-
-        for i in answerList:
-            print(i)
-        break
+arr.sort()
+not1, not2 = Check()
+for i in range(9):
+    if(i != not1 and i !=not2):
+        print(arr[i])
