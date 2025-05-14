@@ -1,37 +1,37 @@
-N, r, c = map(int, input().split())
+N, R, C = map(int, input().split())
 
-Result = 0
+count = 0
 
-def Recrusive(x, y, Width):
-    global Result
-    half = Width // 2
+def Devide(startX, startY, endX, endY):
+    global count
     
-    if(Width == 2):
-        if(x == 0 and y == 0):
-            Result += 1
-        elif(x==1 and y == 0):
-            Result += 2
-        elif(x == 0 and y==1):
-            Result += 3
+    if(endX-startX == 2):
+        if(startY == R and startX == C):
+            print(count)
+            return
+        elif(startY == R and endX-1 == C):
+            print(count+1)
+            return
+        elif(endY-1 == R and startX == C):
+            print(count+2)
+            return
         else:
-            Result += 4
-        return
+            print(count+3)
+            return
+    
+    else:
+        midX = (startX + endX) // 2
+        midY = (startY + endY) // 2
+        if(C < midX and R < midY):
+            Devide(startX, startY, (startX+endX)//2, (startY+endY)//2)
+        elif(C >= midX and R < midY):
+            count += (midX-startX)*(midX-startX)
+            Devide((startX+endX)//2, startY, endX, (startY+endY)//2)
+        elif(C < midX and R >= midY):
+            count += (midX-startX)*(midX-startX)*2
+            Devide(startX, (startY+endY)//2, (startX+endX)//2, endY)
+        else:
+            count += (midX-startX)*(midX-startX)*3
+            Devide((startX+endX)//2, (startY+endY)//2, endX, endY)
 
-    # 1사분면
-    if(x < half  and y < half):
-        Recrusive(x, y, Width//2)
-    # 2사분면
-    elif(half <= x and y < half):
-        Result += half*half
-        Recrusive(x-half, y, Width//2)
-    # 3사분면
-    elif(x < half  and half <= y):
-        Result += half*half*2
-        Recrusive(x, y-half, Width//2)
-    # 4사분면
-    elif(half <= x and y >= half):
-        Result += half*half*3
-        Recrusive(x-half, y-half, Width//2)
-
-Recrusive(c, r, pow(2,N))
-print(Result-1)
+Devide(0, 0, 2**N, 2**N)
