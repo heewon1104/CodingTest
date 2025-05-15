@@ -19,9 +19,9 @@ def DFS(visit, startNode, currentNode, cost):
             DFS(visit, startNode,  i, cost + arr[currentNode][i])
             visit[i] = False
 
-for i in range(N):
-    visit = [False] * N
-    visit[i] = True
-    DFS(visit, i, i, 0)
+
+visit = [False] * N
+visit[0] = True
+DFS(visit, 0, 0, 0)
 
 print(result)
