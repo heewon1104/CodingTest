@@ -1,43 +1,42 @@
-import sys
 from collections import deque
-sys.setrecursionlimit(10**7)
 
-N, M, V = map(int, sys.stdin.readline().split())
-edges = list([] for _ in range(N+1))
-
-for i in range(M):
-    start, end = map(int, sys.stdin.readline().split())
-    edges[start].append(end)
-    edges[end].append(start)
+N, M, V = map(int, input().split())
+graph = [[] for _ in range(N+1)]
+for _ in range(M):
+    start, end = map(int, input().split())
+    graph[start].append(end)
+    graph[end].append(start)
 
 for i in range(1, N+1):
-    edges[i].sort()
+    graph[i].sort()
 
-def Dfs(node, visited):
-    if(visited[node]):
-        return
-    visited[node] = True
-    print(node, end=' ')
-    for i in range(len(edges[node])):
-        Dfs(edges[node][i], visited)
+def DFS(current, visit):
+    visit[current] = True
+    print(current, end=" ")
+    for i in range(len(graph[current])):
+        next = graph[current][i]
+        if(not visit[next]):
+            DFS(next, visit)
 
-def Bfs(start):
+def BFS(start):
+    visit = [False] * (N+1)
+    visit[0] = True
+
     queue = deque()
     queue.append(start)
-    visited = [False] * (N+1)
-    
+    visit[start] = True
+
     while(queue):
-        node = queue.popleft()
-        visited[node] = True
-        print(node, end=' ')
+        current = queue.popleft()
+        print(current, end=" ")
+        for i in range(len(graph[current])):
+            next = graph[current][i]
+            if(not visit[next]):
+                queue.append(next)
+                visit[next] = True
 
-        for i in range(len(edges[node])):
-            if(visited[edges[node][i]] == False):
-                queue.append(edges[node][i])
-                visited[edges[node][i]] = True
-
-visited = [False] * (N+1)   
-Dfs(V, visited)
+visit = [False] * (N+1)
+visit[0] = True
+DFS(V, visit)
 print()
-Bfs(V)
-print()
+BFS(V)
