@@ -1,35 +1,26 @@
-import sys
-import heapq
+N, M = map(int, input().split())
+graph = [([False] * (N+1)) for _ in range(N+1)]
 
-N, M = map(int, sys.stdin.readline().split())
-board = [list(False for _ in range(N+1)) for _ in range(N+1)]
-for i in range(M):
-    start, end = map(int, sys.stdin.readline().split())
-    board[start][end] = True
+for _ in range(M):
+    start, end = map(int, input().split())
+    graph[start][end] = True
 
-def floyd():
-    for i in range(1, N+1):
-        for start in range(1, N+1):
-            if(start == i):
-                continue
-            for end in range(1, N+1):
-                if(start == end or end == i):
-                    continue
-                if(board[start][i] and board[i][end]):
-                    board[start][end] = True
+for i in range(1, N+1):
+    graph[i][i] = True
 
-    res = [0] * (N+1)
-    for i in range(1, N+1):
-        for j in range(1, N+1):
-            if(board[i][j]):
-                res[i] += 1
-                res[j] += 1 
-    count = 0
-    for i in range(1, N+1):
-        if(res[i] == N-1):
-            count += 1
-    print(count)
+for via in range(1, N+1):
+    for start in range(1, N+1):
+        for end in range(1, N+1):
+            if(graph[start][via] and graph[via][end]):
+                graph[start][end] = True
 
-floyd()
-                
-        
+result = 0
+for check in range(1, N+1):
+    flag = True
+    for idx in range(1, N+1):
+        if(not graph[check][idx] and not graph[idx][check]):
+            flag = False
+            break
+    if(flag):
+        result += 1
+print(result)
