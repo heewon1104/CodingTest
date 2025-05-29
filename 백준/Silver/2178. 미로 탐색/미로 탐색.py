@@ -1,30 +1,24 @@
+from collections import deque
 import sys
-from collections import deque 
 
-N, M = map(int, sys.stdin.readline().split())
-board = []
-for _ in range(N):
-    board.append(sys.stdin.readline().rstrip('\n'))
-dx = [1, 0, -1, 0]
-dy = [0, 1, 0, -1]
+N, M = map(int, input().split())
+board = [list(input()) for _ in range(N)]
+visit = [([sys.maxsize] * M) for _ in range(N)]
+dx = [0, 1, 0, -1]
+dy = [-1, 0, 1, 0]
 
-def Bfs():
-    queue = deque()
-    queue.append([0, 0, 0])
-    visited = [([False] * M) for _ in range(N)]
-    visited[0][0] = True
+queue = deque()
+queue.append((0, 0))
+visit[0][0] = 1
 
-    while(queue):
-        X, Y, count = queue.popleft()
-        if(X == M-1 and Y == N-1):
-            print(count+1)
-            break
+while(queue):
+    currentX, currentY = queue.popleft()
+    for i in range(4):
+        nextX = currentX + dx[i]
+        nextY = currentY + dy[i]
+        if(0 <= nextX < M and 0 <= nextY < N and visit[nextY][nextX] == sys.maxsize and board[nextY][nextX] == '1'):
+            queue.append([nextX, nextY])
+            visit[nextY][nextX] = min(visit[currentY][currentX] + 1, visit[nextY][nextX])
 
-        for i in range(4):
-            nextX = X+dx[i]
-            nextY = Y+dy[i]
-            if(nextX >= 0 and nextX < M and nextY >= 0 and nextY < N and not visited[nextY][nextX] and board[nextY][nextX] == '1'):
-                queue.append([nextX, nextY, count+1])
-                visited[nextY][nextX] = True
 
-Bfs()
+print(visit[N-1][M-1])
